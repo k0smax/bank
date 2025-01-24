@@ -7,3 +7,10 @@ def mask_account_card(account_card_information: str) -> str:
         return ' '.join(account_card_list[:-1]) + ' ' + get_mask_account(int(account_card_list[-1]))
     else:
         return ' '.join(account_card_list[:-1]) + ' ' + get_mask_card_number(int(account_card_list[-1]))
+
+
+def get_date(current_date: str) -> str:
+    """ Функция, принимающая дата в формате '2024-03-11T02:26:18.671407' и возвращающая дату в формате 'ДД.ММ.ГГГГ' """
+    current_day_list = current_date.split('-')
+    current_day_list[-1] = current_day_list[-1][:2]
+    return '.'.join(current_day_list[::-1])

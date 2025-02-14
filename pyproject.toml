@@ -8,6 +8,7 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "python-dateutil (>=2.9.0.post0,<3.0.0)"
 ]
 
 
@@ -24,6 +25,7 @@ mypy = "^1.14.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
+pytest-cov = "^6.0.0"
 
 [tool.black]
 line-length = 119
@@ -42,4 +44,4 @@ line_length = 119
 [tool.mypy]
 disallow_untyped_defs = true
 warn_return_any = true
-exclude = '.venv'
+exclude = ['tests', '.venv']

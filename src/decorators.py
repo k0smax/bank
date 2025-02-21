@@ -54,6 +54,7 @@ def log_decorator(filename: str = "") -> Callable[[Callable[..., Any]], Callable
         return inner
 
     return wrapper
+
 # @log_decorator()
 # def add(x, y):
 #     return x + y

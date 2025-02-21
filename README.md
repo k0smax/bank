@@ -29,7 +29,7 @@ poetry install
 
 ```poetry add <наименование_зависимости>```
 
-Также в проекте используется модули `datatime`, `typing` и `dateutil`.
+Также в проекте используется модули `datatime`, `typing`, `dateutil`, `time`, `functools`.
 
 Версия Python - 3.13
 ## Примеры работы функций
@@ -152,6 +152,46 @@ poetry install
                 "1111 1111 1111 1115"
    ]
     ```
+9. Добавлен декоратор `log_decorator(filename="")`, который выполняет логирование выполнения функции. Если параметр filename не задан, то логи выводятся в консоль.
+
+   Примеры логирования:
+
+   При успешном выполнении функции:
+
+   Вывод в консоль:
+    ```
+   add ok
+    ```
+   Запись в файл:
+   ```commandline
+   time_start : 02/22/2025, 01:04:20
+   time_finish : 02/22/2025, 01:04:20
+   time_lead : 2.5033950805664062e-05
+   name_function : add
+   status : True
+   type_error : Not error
+   input_data : (2, 4)
+   result : 6
+   console : add ok
+   ```
+   При неуспешном выполнении функции:
+
+   Вывод в консоль:
+    ```
+   add error: can only concatenate str (not "int") to str. Inputs: ('d', 2)
+    ```
+   Запись в файл:
+   ```commandline
+   time_start : 02/22/2025, 01:05:25
+   time_finish : 02/22/2025, 01:05:25
+   time_lead : 2.6702880859375e-05
+   name_function : add
+   status : False
+   type_error : error: can only concatenate str (not "int") to str
+   input_data : ('d', 2)
+   result : False
+   console : add error: can only concatenate str (not "int") to str. Inputs: ('d', 2)
+   ```
    
 ## Тестирование
 

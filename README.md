@@ -81,6 +81,77 @@ poetry install
    {'id': 939719570, 'state': 'EXECUTED', 'date': '2018-06-30T02:08:58.425572'}
    ]
     ```
+5. Функция `mask_account_card(account_card_information)` возвращает замаскированный номер карты или счета.
+
+   Пример работы функции:
+
+    ```
+   account_card_informaion = "Visa 7546653887466538"
+   mask_account_card(account_card_information) -> "Visa 7546 65** **** 6538"
+   
+   account_card_informaion = "Счет 34568965230998761567"
+   mask_account_card(account_card_information) -> "Счет **1567"
+    ```
+6. Функция `get_date(current_date)` принимает дату в любом формате и возвращает дату в формате 'ДД.ММ.ГГГГ'
+
+   Пример работы функции:
+
+    ```
+   current_date = "2024-03-11T02:26:18.671407"
+   get_date(current_date) -> "11.03.2024"
+   
+   current_date = "11 February 2025"
+   get_date(current_date) -> "11.02.2025"
+    ```
+7. Функция `filter_by_currency(list_dicts_operation, currency="USD")` принимает список словарей с транзакциями и возвращает итератор,
+    который поочередно выдает транзакции, где валюта операции соответствует заданной.
+
+   Пример работы функции:
+
+    ```
+   list_dicts_operation = [
+   {"id" : 1, "operationAmount": {"currency" : {"code" : "USD"}}},
+   {"id" : 2, "operationAmount": {"currency" : {"code" : "RUB"}}},
+   {"id" : 3, "operationAmount": {"currency" : {"code" : "USD"}}}
+   ]
+   operations = filter_by_currency(list_dicts_operation, "USD")
+   list(operations) = [
+   {'id': 1, 'operationAmount': {'currency': {'code': 'USD'}}},
+   {'id': 3, 'operationAmount': {'currency': {'code': 'USD'}}}
+   ]
+    ```
+8. Функция `transaction_descriptions(list_dicts_operation)` принимает список словарей с транзакциями и возвращает по очереди описание каждой операции.
+
+   Пример работы функции:
+
+    ```
+   list_dicts_operation = [
+   {"id" : 1, "description": "Перевод организации"},
+   {"id" : 2, "description": "Перевод с карты на карту"},
+   {"id" : 3, "description": "Перевод со счета на карту"},
+   ]
+   operations = transaction_descriptions(list_dicts_operation)
+   list(operations) = [
+   "Перевод организации",
+   "Перевод с карты на карту",
+   "Перевод со счета на карту"
+   ]
+    ```
+9. Функция `card_number_generator(start_number, finish_number)` поочередно генерирует номера карт в диапазоне (start_number - finish_number)
+    в формате 'XXXX XXXX XXXX XXXX', где X - цифра номера карты.
+
+   Пример работы функции:
+
+    ```
+   cards_number = card_number_generator(1111111111111111, 1111111111111115)
+   list(cards_number) = [
+                "1111 1111 1111 1111",
+                "1111 1111 1111 1112",
+                "1111 1111 1111 1113",
+                "1111 1111 1111 1114",
+                "1111 1111 1111 1115"
+   ]
+    ```
    
 ## Тестирование
 

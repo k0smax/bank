@@ -1,4 +1,12 @@
+import logging
 import math
+
+masks_logger = logging.getLogger("masks")
+masks_logger.setLevel(logging.DEBUG)
+file_handler = logging.FileHandler("../logs/masks.log", encoding="utf-8", mode="w")
+file_formatter = logging.Formatter("%(asctime)s %(name)s %(levelname)s: %(message)s")
+file_handler.setFormatter(file_formatter)
+masks_logger.addHandler(file_handler)
 
 
 def split_string_blocks(string: str, char_in_block: int) -> str:
@@ -35,21 +43,46 @@ def get_mask_card_number(card_number: str) -> str:
     """Функция маскирует номер карты в формате: XXXX XX** **** XXXX"""
     # Проверка на правильное количество цифр в номере карты
     # (в данной программе количество цифр в номере карты предполагается в диапазоне от 13 до 19 включительно)
+    masks_logger.info(f"Запущена функция маскировки номера карты {get_mask_card_number.__name__}")
+
     if len(card_number) == 0:
         return ""
     if not card_number.isdigit():
+        masks_logger.error(f"Номер карты {card_number} содержит не только цифры!")
+
         raise TypeError("Номер карты может содержать только цифры!")
     if len(card_number) > 19 or len(card_number) < 13:
+        masks_logger.error(f"Количество цифр в номере карты {card_number} не соответствует реальному значению!")
+
         raise ValueError("Количество цифр в номере карты не соответствует реальному значению!")
-    return split_string_blocks(replace_char_stars(card_number, len(card_number) - 9, len(card_number) - 4), 4)
+    mask_card = split_string_blocks(replace_char_stars(card_number, len(card_number) - 9, len(card_number) - 4), 4)
+
+    masks_logger.info(f"Маскировка номера карты выполнена успешно! Результат: {mask_card}")
+
+    return mask_card
 
 
-# print(get_mask_card_number('23456657765437458'))
 def get_mask_account(account_number: str) -> str:
     """Функция маскирует номер счета в формате: **XXXX"""
     # Предполагается, что номер счета может содержать только 20 цифр
+    masks_logger.info(f"Запущена функция маскировки номера счета {get_mask_account.__name__}")
+
     if not account_number.isdigit():
+        masks_logger.error(f"Номер счета {account_number} содержит не только цифры!")
+
         raise TypeError("Номер счета может содержать только цифры!")
     if len(account_number) != 20:
+        masks_logger.error(f"Количество цифр в номере счета {account_number} = {len(account_number)}! НЕ равно 20!")
+
         raise ValueError("Номер банковского счета должен состоять из 20 цифр!")
-    return replace_char_stars(account_number[-6:], 1, 2)
+    mask_account = replace_char_stars(account_number[-6:], 1, 2)
+
+    masks_logger.info(f"Маскировка номера счета выполнена успешно! Результат: {mask_account}")
+
+    return mask_account
+
+
+# get_mask_account("64788928876445в678490")
+# get_mask_card_number("6578849883в766514")
+# get_mask_account("6473")
+# get_mask_card_number("475898738987")

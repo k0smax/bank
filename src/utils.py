@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from typing import Any, Dict, List
 
@@ -13,6 +14,14 @@ load_dotenv()
 API_KEY = os.getenv("API_KEY")
 
 
+utils_logger = logging.getLogger("utils")
+utils_logger.setLevel(logging.DEBUG)
+file_handler = logging.FileHandler(filename="../logs/utils.log", mode="w", encoding="utf-8")
+file_formatter = logging.Formatter("%(asctime)s %(name)s %(levelname)s: %(message)s")
+file_handler.setFormatter(file_formatter)
+utils_logger.addHandler(file_handler)
+
+
 def get_operations_list(path_to_file: str) -> List[Dict[str, Any]]:
     """
     Возвращает список словарей с данными о финансовых транзакциях из json-файла.
@@ -21,14 +30,18 @@ def get_operations_list(path_to_file: str) -> List[Dict[str, Any]]:
       path_to_file
         путь до json-файла
     """
+    utils_logger.info(f"Запущена функция {get_operations_list.__name__}")
     try:
         with open(path_to_file, encoding="utf-8") as file:
             data = json.load(file)
         if isinstance(data, list):
+            utils_logger.info(f"json-файл {path_to_file} успешно прочитан!")
             return data
         else:
+            utils_logger.info(f"Содержимое json-файла {path_to_file} не является списком!")
             return []
-    except Exception:
+    except Exception as exc_info:
+        utils_logger.error(f"Произошла ошибка! Информация об ошибке - {exc_info}")
         return []
 
 
@@ -39,6 +52,8 @@ def get_amount_transaction(transaction: Dict[str, Any]) -> float:
       transaction
         транзакция
     """
+    utils_logger.info(f"Запущена функция {get_amount_transaction.__name__}")
+
     default_amount = 0.0
     try:
         # Получаем информацию о валюте и сумме транзакции
@@ -58,17 +73,23 @@ def get_amount_transaction(transaction: Dict[str, Any]) -> float:
                 f"to={to_currency}&from={from_currency}&amount={amount}"
             )
             headers = {"apikey": API_KEY}
+
+            utils_logger.info(f"Выполняется запрос на сервер {url}")
+
             response = requests.get(url, headers=headers)
             if response.status_code == 200:
                 amount = response.json().get("result")
+                utils_logger.info(f"Запрос на сервер {url} успешно выполнен!")
                 return float(amount) if amount else default_amount
-
+            utils_logger.warning(f"Не удалось подключиться к серверу {url}!")
         return default_amount
     except Exception as exp_info:
-        print(f"Error!!! - {exp_info}")
+        utils_logger.error(f"Error!!! - {exp_info}")
         return default_amount
 
 
-# print(get_operations_list("../data/operations.json"))
+# u = get_operations_list("../data/operations.json")
+# print(u[0])
+# get_amount_transaction(u[1])
 # for tr in get_operations_list("../data/operations.json"):
 #     print(get_amount_transaction(tr))

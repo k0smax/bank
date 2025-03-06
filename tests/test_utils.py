@@ -1,6 +1,6 @@
-import pytest
+from unittest.mock import Mock, mock_open, patch
 
-from unittest.mock import Mock, patch, mock_open
+import pytest
 
 import src.utils
 from src.utils import get_operations_list, get_amount_transaction

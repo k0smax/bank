@@ -160,6 +160,7 @@ def list_transaction():
         },
     ]
 
+
 @pytest.fixture
 def transaction_rub():
     return {
@@ -170,6 +171,7 @@ def transaction_rub():
             }
         }
     }
+
 
 @pytest.fixture
 def transaction_usd():
@@ -182,6 +184,7 @@ def transaction_usd():
         }
     }
 
+
 @pytest.fixture
 def csv_or_excel_file():
     return {
@@ -189,6 +192,7 @@ def csv_or_excel_file():
         'name': ['Maxim', 'Sasha', 'Oleg'],
         'is_beautiful': [True, False, False]
     }
+
 
 @pytest.fixture
 def result_reader_csv_or_excel_file():

@@ -6,6 +6,8 @@ from typing import Any, Dict, List
 import requests
 from dotenv import load_dotenv
 
+from config import PATH_TO_PROJECT
+
 # Загрузка переменных из .env-файла
 load_dotenv()
 
@@ -16,7 +18,7 @@ API_KEY = os.getenv("API_KEY")
 
 utils_logger = logging.getLogger("utils")
 utils_logger.setLevel(logging.DEBUG)
-file_handler = logging.FileHandler(filename="../logs/utils.log", mode="w", encoding="utf-8")
+file_handler = logging.FileHandler(os.path.join(PATH_TO_PROJECT, "logs/utils.log"), mode="w", encoding="utf-8")
 file_formatter = logging.Formatter("%(asctime)s %(name)s %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatter)
 utils_logger.addHandler(file_handler)

@@ -1,9 +1,12 @@
 import logging
 import math
+import os
+
+from config import PATH_TO_PROJECT
 
 masks_logger = logging.getLogger("masks")
 masks_logger.setLevel(logging.DEBUG)
-file_handler = logging.FileHandler("../logs/masks.log", encoding="utf-8", mode="w")
+file_handler = logging.FileHandler(os.path.join(PATH_TO_PROJECT, "logs/masks.log"), encoding="utf-8", mode="w")
 file_formatter = logging.Formatter("%(asctime)s %(name)s %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatter)
 masks_logger.addHandler(file_handler)

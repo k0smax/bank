@@ -17,12 +17,23 @@ poetry install
 
 Установленные зависимости:
 
+dependencies
+- python-dateutil (>=2.9.0.post0,<3.0.0)
+- requests (>=2.32.3,<3.0.0)
+- python-dotenv (>=1.0.1,<2.0.0)
+- pandas (>=2.2.3,<3.0.0)
+- openpyxl (>=3.1.5,<4.0.0)
+
+group.dev
+- pytest (8.3.4)
+- pytest-cov (6.0.0)
+
+group.lint
 - flake8 (7.1.1)
 - black (24.10.0)
 - isort (5.13.2)
 - mypy (1.14.1)
-- pytest (8.3.4)
-- pytest-cov (6.0.0)
+
 - python-dateutil (>=2.9.0.post0,<3.0.0)
 
 Для добавления зависимостей вручную с помощью poetry необходимо выполнить следующую команду для каждой зависимости
@@ -152,7 +163,7 @@ poetry install
                 "1111 1111 1111 1115"
    ]
     ```
-9. Добавлен декоратор `log_decorator(filename="")`, который выполняет логирование выполнения функции. Если параметр filename не задан, то логи выводятся в консоль.
+10. Добавлен декоратор `log_decorator(filename="")`, который выполняет логирование выполнения функции. Если параметр filename не задан, то логи выводятся в консоль.
 
    Примеры логирования:
 
@@ -192,7 +203,8 @@ poetry install
    result : False
    console : add error: can only concatenate str (not "int") to str. Inputs: ('d', 2)
    ```
-   
+11. Добавлены функции `reader_csv_file(file_path)` и `reader_excel_file(file_path: str)` для считывания данных из .csv и .xlsx файлов.
+
 ## Тестирование
 
 Чтобы запустить все тесты, выполните: `pytest`.

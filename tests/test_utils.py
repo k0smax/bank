@@ -1,9 +1,9 @@
+from unittest.mock import Mock, mock_open, patch
+
 import pytest
 
-from unittest.mock import Mock, patch, mock_open
-
 import src.utils
-from src.utils import get_operations_list, get_amount_transaction
+from src.utils import get_amount_transaction, get_operations_list
 
 
 def test_get_operations_list_valid():
@@ -39,9 +39,9 @@ def test_get_amount_transaction_usd(transaction_usd):
 
 @pytest.mark.parametrize(
     "status_code, operation_amount, amount, currency, code, return_value, result", [
-        (500, False, 100, False, "USD", {"result": 500.0}, 0.0), # server_error
+        (500, False, 100, False, "USD", {"result": 500.0}, 0.0),  # server_error
         (200, {None}, None, None, None, None, 0.0),  # not operationAmount
-        (200, False, "invalid", False, "USD", {"result": 0.0}, 0.0), # not amount
+        (200, False, "invalid", False, "USD", {"result": 0.0}, 0.0),  # not amount
         (200, False, 100, False, None, None, 0.0),  # not code
         (200, False, 100, False, "GBP", None, 0.0),  # currency invalid
     ]

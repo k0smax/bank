@@ -160,6 +160,7 @@ def list_transaction():
         },
     ]
 
+
 @pytest.fixture
 def transaction_rub():
     return {
@@ -171,6 +172,7 @@ def transaction_rub():
         }
     }
 
+
 @pytest.fixture
 def transaction_usd():
     return {
@@ -181,3 +183,33 @@ def transaction_usd():
             }
         }
     }
+
+
+@pytest.fixture
+def csv_or_excel_file():
+    return {
+        'id': [0, 1, 2],
+        'name': ['Maxim', 'Sasha', 'Oleg'],
+        'is_beautiful': [True, False, False]
+    }
+
+
+@pytest.fixture
+def result_reader_csv_or_excel_file():
+    return [
+        {
+            "id": 0,
+            "name": "Maxim",
+            "is_beautiful": True
+        },
+        {
+            "id": 1,
+            "name": "Sasha",
+            "is_beautiful": False
+        },
+        {
+            "id": 2,
+            "name": "Oleg",
+            "is_beautiful": False
+        },
+    ]

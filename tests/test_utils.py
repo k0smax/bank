@@ -3,7 +3,8 @@ from unittest.mock import Mock, mock_open, patch
 import pytest
 
 import src.utils
-from src.utils import get_amount_transaction, get_operations_list
+from src.utils import (get_amount_transaction, get_operations_list, counter_categories,
+                       search_operations_by_string_search)
 
 
 def test_get_operations_list_valid():
@@ -60,3 +61,50 @@ def test_get_amount_transaction_except(mock_requests_get, status_code, operation
     mock_requests_get.return_value.status_code = status_code
     mock_requests_get.return_value.json.return_value = return_value
     assert get_amount_transaction(transaction) == result
+
+
+@pytest.mark.parametrize(
+    "string_search, expected", [
+        ("Выплата", []),
+        ("Перевод с карты на счет", [
+            {
+                "id": 147815167,
+                "state": "EXECUTED",
+                "date": "2023-09-18T20:05:55.413030",
+                "amount": "50870.71",
+                "currency_name": "EUR",
+                "currency_code": "EUR",
+                "description": "Перевод с карты на счет",
+                "from": "Maestro 4598300720424501",
+                "to": "Счет 7699855375169288",
+            },
+            {
+                "id": 317987878,
+                "state": "EXECUTED",
+                "date": "2024-04-10T11:30:12.458625",
+                "amount": "55985.82",
+                "currency_name": "",
+                "currency_code": "",
+                "description": "Перевод с карты на счет",
+                "from": "Visa Classic 8906171742833215",
+                "to": "Счет 6086997013848217",
+            }
+        ])
+    ]
+)
+def test_search_operations_by_string_search(list_transaction, string_search, expected):
+    assert search_operations_by_string_search(list_transaction, string_search) == expected
+
+
+@pytest.mark.parametrize(
+    "categories, expected", [
+        ([], {}),
+        (["Перевод со счета на счет"], {"Перевод со счета на счет": 2}),
+        (["Перевод с карты на карту", "Перевод организации"], {
+            "Перевод с карты на карту": 2,
+            "Перевод организации": 3
+        })
+    ]
+)
+def test_counter_categories(list_transaction, categories, expected):
+    assert counter_categories(list_transaction, categories) == expected

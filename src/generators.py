@@ -9,7 +9,7 @@ def filter_by_currency(list_dicts_operation: List[Dict[str, Any]], currency: str
     operations_currency = (
         operation
         for operation in filter(
-            lambda x: x.get("operationAmount", {}).get("currency", {}).get("code", {}) == currency,
+            lambda x: x.get("currency_code") == currency,
             list_dicts_operation,
         )
     )

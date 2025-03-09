@@ -1,6 +1,8 @@
 import json
 import logging
 import os
+import re
+from collections import Counter
 from typing import Any, Dict, List
 
 import requests
@@ -38,6 +40,13 @@ def get_operations_list(path_to_file: str) -> List[Dict[str, Any]]:
             data = json.load(file)
         if isinstance(data, list):
             utils_logger.info(f"json-файл {path_to_file} успешно прочитан!")
+            # Преобразовываем список словарей (так, чтобы не было вложенных словарей)
+            for operation in data:
+                if operation.get("operationAmount"):
+                    operation_amount = operation.pop("operationAmount")
+                    operation["amount"] = operation_amount.get("amount", 0)
+                    operation["currency_code"] = operation_amount.get("currency", {}).get("code")
+                    operation["currency_name"] = operation_amount.get("currency", {}).get("name")
             return data
         else:
             utils_logger.info(f"Содержимое json-файла {path_to_file} не является списком!")
@@ -58,18 +67,13 @@ def get_amount_transaction(transaction: Dict[str, Any]) -> float:
 
     default_amount = 0.0
     try:
-        # Получаем информацию о валюте и сумме транзакции
-        operation_amount = transaction.get("operationAmount", {})
-        currency_info = operation_amount.get("currency", {})
-        currency_code = currency_info.get("code")
-        amount = float(operation_amount.get("amount", 0))
-
+        amount = float(transaction["amount"])
         # Проверяем, является ли валюта RUB, и если не является - делаем запрос на сервер
-        if currency_code == "RUB":
+        if transaction["currency_code"] == "RUB":
             return amount
-        elif currency_code in ("USD", "EUR"):
+        elif transaction["currency_code"] in ("USD", "EUR"):
             to_currency = "RUB"
-            from_currency = currency_code
+            from_currency = transaction["currency_code"]
             url = (
                 f"https://api.apilayer.com/exchangerates_data/convert?"
                 f"to={to_currency}&from={from_currency}&amount={amount}"
@@ -90,8 +94,37 @@ def get_amount_transaction(transaction: Dict[str, Any]) -> float:
         return default_amount
 
 
-# u = get_operations_list("../data/operations.json")
-# print(u[0])
-# get_amount_transaction(u[1])
-# for tr in get_operations_list("../data/operations.json"):
-#     print(get_amount_transaction(tr))
+def search_operations_by_string_search(transactions: list[dict], string_search: str) -> list[dict]:
+    """
+    Функция принимает список транзакций и строку, по которой необходимо отфильтровать транзакции
+    :param transactions: список транзакций
+    :param string_search: строка поиска
+    :return: отфильтрованный список транзакций по строке поиска
+    """
+    pattern = re.compile(string_search.lower())
+    return [
+        transaction for transaction in transactions if re.search(pattern, transaction.get("description", "").lower())
+    ]
+
+
+def counter_categories(transactions: list[dict], categories: list) -> dict:
+    """
+    Функция подсчитывает количество категорий, переданных списком, в списке транзакций
+    :param transactions: список транзакций
+    :param categories: категории, по которым необходимо получить статистику
+    :return: словарь, в котором ключи — это названия категорий, а значения — это количество операций в каждой категории
+    """
+    counted = Counter(
+        transaction.get("description") for transaction in transactions if transaction.get("description") in categories
+    )
+    return dict(counted)
+
+
+if __name__ == "__main__":
+    u = get_operations_list(os.path.join(PATH_TO_PROJECT, "data/operations.json"))
+    # print(u[0])
+    # print(search_operations_by_string_search(u, "Перевод организации"))
+    print(counter_categories(u, []))
+    # get_amount_transaction(u[1])
+    # for tr in get_operations_list("../data/operations.json"):
+    #     print(get_amount_transaction(tr))
